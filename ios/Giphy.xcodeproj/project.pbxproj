@@ -7,8 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A06DBC6523D8566300966E35 /* Giphy.swift in Sources */ = {isa = PBXBuildFile; fileRef = A06DBC6423D8566300966E35 /* Giphy.swift */; };
-		B3E7B58A1CC2AC0600A0062D /* Giphy.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* Giphy.m */; };
+		A0F298CC23D8A07000CE4C2C /* RNGiphyKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0F298CB23D8A07000CE4C2C /* RNGiphyKeyboard.swift */; };
+		A0F298D023D8C54E00CE4C2C /* EnumExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0F298CF23D8C54E00CE4C2C /* EnumExtensions.swift */; };
+		B3E7B58A1CC2AC0600A0062D /* RNGiphyKeyboard.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* RNGiphyKeyboard.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -26,9 +27,9 @@
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libGiphy.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libGiphy.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		A06DBC6323D8566300966E35 /* Giphy-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Giphy-Bridging-Header.h"; sourceTree = "<group>"; };
-		A06DBC6423D8566300966E35 /* Giphy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Giphy.swift; sourceTree = "<group>"; };
-		B3E7B5881CC2AC0600A0062D /* Giphy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Giphy.h; sourceTree = "<group>"; };
-		B3E7B5891CC2AC0600A0062D /* Giphy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Giphy.m; sourceTree = "<group>"; };
+		A0F298CB23D8A07000CE4C2C /* RNGiphyKeyboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RNGiphyKeyboard.swift; sourceTree = "<group>"; };
+		A0F298CF23D8C54E00CE4C2C /* EnumExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EnumExtensions.swift; sourceTree = "<group>"; };
+		B3E7B5891CC2AC0600A0062D /* RNGiphyKeyboard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNGiphyKeyboard.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,14 +51,22 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		2FBB2E07D454652BA90F782F /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
-				A06DBC6423D8566300966E35 /* Giphy.swift */,
-				B3E7B5881CC2AC0600A0062D /* Giphy.h */,
-				B3E7B5891CC2AC0600A0062D /* Giphy.m */,
+				A0F298CF23D8C54E00CE4C2C /* EnumExtensions.swift */,
+				A0F298CB23D8A07000CE4C2C /* RNGiphyKeyboard.swift */,
+				B3E7B5891CC2AC0600A0062D /* RNGiphyKeyboard.m */,
 				134814211AA4EA7D00B7C361 /* Products */,
 				A06DBC6323D8566300966E35 /* Giphy-Bridging-Header.h */,
+				2FBB2E07D454652BA90F782F /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -119,8 +128,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B3E7B58A1CC2AC0600A0062D /* Giphy.m in Sources */,
-				A06DBC6523D8566300966E35 /* Giphy.swift in Sources */,
+				A0F298CC23D8A07000CE4C2C /* RNGiphyKeyboard.swift in Sources */,
+				A0F298D023D8C54E00CE4C2C /* EnumExtensions.swift in Sources */,
+				B3E7B58A1CC2AC0600A0062D /* RNGiphyKeyboard.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

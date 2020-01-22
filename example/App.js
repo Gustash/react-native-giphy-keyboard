@@ -1,36 +1,46 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
-
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
-  ScrollView,
-  View,
-  Text,
   StatusBar,
   Button,
+  NativeModules,
+  NativeEventEmitter,
+  Image,
+  Keyboard,
 } from 'react-native';
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 
-const App: () => React$Node = () => {
+const EventEmitter = new NativeEventEmitter(NativeModules.RNGiphyKeyboard);
+
+const App = () => {
+  const [selectedGif, setSelectedGif] = useState(null);
+
+  useEffect(() => {
+    EventEmitter.addListener('mediaSelected', media => {
+      setSelectedGif(media);
+      NativeModules.RNGiphyKeyboard.dismissGiphy();
+    });
+  }, []);
+
   return (
     <>
       <StatusBar barStyle="dark-content" />
       <SafeAreaView>
-        <Button onPress={() => {}}>Open Giphy!</Button>
+        {selectedGif && (
+          <Image style={{width: '100%', aspectRatio: selectedGif.aspectRatio}} source={{uri: selectedGif.url}} />
+        )}
+        <Button
+          title="Open Giphy!"
+          onPress={() => {
+            NativeModules.RNGiphyKeyboard.openGiphy({
+              rendition: 'fixedWidth',
+              fileType: 'gif',
+              mediaTypes: ['gifs', 'stickers']
+            });
+          }}
+        />
       </SafeAreaView>
     </>
   );
