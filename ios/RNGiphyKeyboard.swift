@@ -58,15 +58,17 @@ open class RNGiphyKeyboard: RCTEventEmitter, GiphyDelegate {
         self.fileType = GPHFileExtension.with(key: fileType)
       }
 
-      self.giphy = giphy
-
-      self.rootViewController.present(giphy, animated: true)
+      self.rootViewController.present(giphy, animated: true, completion: {
+        self.giphy = giphy
+      })
     }
   }
 
   @objc func dismissGiphy() {
     DispatchQueue.main.async {
-      self.giphy?.dismiss(animated: true, completion: nil)
+      self.giphy?.dismiss(animated: true, completion: {
+        self.giphy = nil
+      })
     }
   }
 
