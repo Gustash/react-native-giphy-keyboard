@@ -4,25 +4,26 @@ import {
   StyleSheet,
   StatusBar,
   Button,
-  NativeModules,
-  NativeEventEmitter,
   Image,
   Keyboard,
 } from 'react-native';
+import * as GiphyKeyboard from 'react-native-giphy-keyboard';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-
-const EventEmitter = new NativeEventEmitter(NativeModules.RNGiphyKeyboard);
 
 const App = () => {
   const [selectedGif, setSelectedGif] = useState(null);
 
   useEffect(() => {
-    EventEmitter.addListener('mediaSelected', media => {
+    const removeListener = GiphyKeyboard.addMediaSelectedListener(media => {
       setSelectedGif(media);
       console.log(media);
-      NativeModules.RNGiphyKeyboard.dismissGiphy();
+      GiphyKeyboard.dismiss();
     });
+
+    return () => {
+      removeListener();
+    };
   }, []);
 
   return (
@@ -30,16 +31,19 @@ const App = () => {
       <StatusBar barStyle="dark-content" />
       <SafeAreaView>
         {selectedGif && (
-          <Image style={{width: '100%', aspectRatio: selectedGif.aspectRatio}} source={{uri: selectedGif.url}} />
+          <Image
+            style={{width: '100%', aspectRatio: selectedGif.aspectRatio}}
+            source={{uri: selectedGif.url}}
+          />
         )}
         <Button
           title="Open Giphy!"
           onPress={() => {
-            NativeModules.RNGiphyKeyboard.openGiphy({
+            GiphyKeyboard.openGiphy({
               rendition: 'fixedWidth',
               fileType: 'gif',
               mediaTypes: ['gifs', 'stickers'],
-              theme: 'dark'
+              theme: 'dark',
             });
           }}
         />
