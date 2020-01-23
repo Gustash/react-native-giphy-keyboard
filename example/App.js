@@ -20,6 +20,7 @@ const App = () => {
   useEffect(() => {
     EventEmitter.addListener('mediaSelected', media => {
       setSelectedGif(media);
+      console.log(media);
       NativeModules.RNGiphyKeyboard.dismissGiphy();
     });
   }, []);
@@ -37,7 +38,8 @@ const App = () => {
             NativeModules.RNGiphyKeyboard.openGiphy({
               rendition: 'fixedWidth',
               fileType: 'gif',
-              mediaTypes: ['gifs', 'stickers']
+              mediaTypes: ['gifs', 'stickers'],
+              theme: 'dark'
             });
           }}
         />
