@@ -52,7 +52,7 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>GiphyApiKey</key>
-	<string>dm5YT4Vg8bCM0VkDyYAEhTGCAYGyL8L4</string>
+	<string>YOUR_API_KEY_HERE</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 </dict>

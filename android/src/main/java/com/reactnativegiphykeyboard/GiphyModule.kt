@@ -12,7 +12,6 @@ import com.giphy.sdk.ui.themes.DarkTheme
 import com.giphy.sdk.ui.themes.GridType
 import com.giphy.sdk.ui.themes.LightTheme
 import com.giphy.sdk.ui.utils.imageWithRenditionType
-import com.giphy.sdk.ui.views.GPHMediaView
 import com.giphy.sdk.ui.views.GiphyDialogFragment
 
 /* Events */
@@ -32,7 +31,11 @@ class GiphyModule(private val reactContext: ReactApplicationContext) : ReactCont
     override fun initialize() {
         super.initialize()
 
-        GiphyCoreUI.configure(reactContext, "dm5YT4Vg8bCM0VkDyYAEhTGCAYGyL8L4")
+        val packageName = reactContext.packageName
+        val resId = reactContext.resources.getIdentifier("giphy_api_key", "string", packageName)
+        val apiKey = reactContext.getString(resId)
+
+        GiphyCoreUI.configure(reactContext, apiKey)
     }
 
     override fun getName(): String {
