@@ -17,11 +17,15 @@ export function openGiphy(options) {
 export function addMediaSelectedListener(callback) {
   const listener = EventEmitter.addListener(MEDIA_SELECTED_EVENT, callback);
 
-  return listener.remove;
+  return () => {
+    listener.remove();
+  }
 }
 
 export function addDismissedListener(callback) {
   const listener = EventEmitter.addListener(DISMISSED_EVENT, callback);
 
-  return listener.remove;
+  return () => {
+    listener.remove();
+  }
 }
