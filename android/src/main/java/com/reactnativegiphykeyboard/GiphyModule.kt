@@ -25,6 +25,7 @@ private const val DEFAULT_GRID_TYPE = "waterfall"
 
 /** Extensions **/
 fun ReadableMap.getStringSafe(name: String): String? = if (hasKey(name)) getString(name) else null
+
 fun ReadableMap.getArrayList(name: String): ArrayList<Any> =
         if (hasKey(name)) getArray(name)!!.toArrayList()
         else arrayListOf()
@@ -60,44 +61,35 @@ class GiphyModule(private val reactContext: ReactApplicationContext) : ReactCont
     fun openGiphy(options: ReadableMap) {
         val activity = reactContext.currentActivity as? ReactActivity ?: return
 
-        val giphyDialog = with(options) {
+        // Create new dialog instance and assign it
+        giphyDialog = with(options) {
             // Get settings from JS call
-            val rendition = options.getStringSafe("rendition") ?: DEFAULT_RENDITION
-            val fileType = options.getStringSafe("fileType") ?: DEFAULT_FILE_TYPE
-            val gridType = getStringSafe("gridType") ?: DEFAULT_GRID_TYPE
-            val theme = getStringSafe("theme")
-            val mediaTypeConfig = getArrayList("mediaTypes")
-                    .filterIsInstance<String>()
-                    .mapNotNull(::getGPHContentType)
-                    .toTypedArray()
-
-            val settings = GPHSettings(
-                    gridType = GridType.valueOf(gridType),
-                    theme = when (theme) {
-                        "dark" -> DarkTheme
-                        else -> LightTheme
-                    }
-            )
-
-            if (mediaTypeConfig.isNotEmpty()) {
-                settings.mediaTypeConfig = mediaTypeConfig
+            val settings = GPHSettings().apply {
+                mediaTypeConfig = getArrayList("mediaTypes")
+                        .filterIsInstance<String>()
+                        .mapNotNull(::getGPHContentType)
+                        .toTypedArray()
+                        .ifEmpty { GPHContentType.values() }
+                gridType = getStringSafe("gridType").let { gridType ->
+                    GridType.valueOf(gridType ?: DEFAULT_GRID_TYPE)
+                }
+                theme = when (getStringSafe("theme")) {
+                    "dark" -> DarkTheme
+                    else -> LightTheme
+                }
             }
 
-            // Create instance with settings and setup listener
-            with(GiphyDialogFragment.newInstance(settings)) {
-                gifSelectionListener = getGifListener(
-                        rendition = rendition,
-                        fileType = fileType
-                )
-                this
+            // Create instance
+            GiphyDialogFragment.newInstance(settings).apply {
+                val rendition = getStringSafe("rendition") ?: DEFAULT_RENDITION
+                val fileType = getStringSafe("fileType") ?: DEFAULT_FILE_TYPE
+
+                gifSelectionListener = getGifListener(rendition, fileType)
             }
         }
 
         // Present the dialog
-        giphyDialog.show(activity.supportFragmentManager, "giphy_dialog")
-
-        // Save the reference for `dismissGiphy`
-        this.giphyDialog = giphyDialog
+        giphyDialog?.show(activity.supportFragmentManager, "giphy_dialog")
     }
 
     @ReactMethod
@@ -111,7 +103,6 @@ class GiphyModule(private val reactContext: ReactApplicationContext) : ReactCont
     ) = object : GiphyDialogFragment.GifSelectionListener {
 
         override fun onGifSelected(media: Media) {
-            val body = Arguments.createMap()
             val image = media.imageWithRenditionType(RenditionType.valueOf(rendition)) ?: return
             val aspectRatio = image.width / image.height.toDouble()
             val url = when (fileType) {
@@ -120,10 +111,13 @@ class GiphyModule(private val reactContext: ReactApplicationContext) : ReactCont
                 "webp" -> image.webPUrl
                 else -> ""
             }
-            body.putString("url", url)
-            body.putInt("width", image.width)
-            body.putInt("height", image.height)
-            body.putDouble("aspectRatio", aspectRatio)
+            val body = Arguments.createMap().apply {
+                putString("url", url)
+                putString("url", url)
+                putInt("width", image.width)
+                putInt("height", image.height)
+                putDouble("aspectRatio", aspectRatio)
+            }
 
             reactContext.sendEvent(MEDIA_SELECTED_EVENT, body)
         }
@@ -133,6 +127,5 @@ class GiphyModule(private val reactContext: ReactApplicationContext) : ReactCont
 
             reactContext.sendEvent(GIPHY_DISMISSED_EVENT)
         }
-
     }
 }
