@@ -14,7 +14,7 @@ import com.giphy.sdk.ui.themes.LightTheme
 import com.giphy.sdk.ui.utils.imageWithRenditionType
 import com.giphy.sdk.ui.views.GiphyDialogFragment
 
-/* Events */
+/** Events */
 private const val MEDIA_SELECTED_EVENT = "mediaSelected"
 private const val GIPHY_DISMISSED_EVENT = "giphyDismissed"
 
@@ -23,10 +23,26 @@ private const val DEFAULT_RENDITION = "original"
 private const val DEFAULT_FILE_TYPE = "mp4"
 private const val DEFAULT_GRID_TYPE = "waterfall"
 
-class GiphyModule(private val reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext), GiphyDialogFragment.GifSelectionListener {
+/** Extensions **/
+fun ReadableMap.getStringSafe(name: String): String? = if (hasKey(name)) getString(name) else null
+fun ReadableMap.getArrayList(name: String): ArrayList<Any> =
+        if (hasKey(name)) getArray(name)!!.toArrayList()
+        else arrayListOf()
+
+fun ReactApplicationContext.sendEvent(event: String, data: Any? = null) {
+    getJSModule(RCTDeviceEventEmitter::class.java).emit(event, data)
+}
+
+fun getGPHContentType(value: String): GPHContentType? = when (value) {
+    "gifs" -> GPHContentType.gif
+    "stickers" -> GPHContentType.sticker
+    "emoji" -> GPHContentType.emoji
+    "text" -> GPHContentType.text
+    else -> null
+}
+
+class GiphyModule(private val reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
     private var giphyDialog: GiphyDialogFragment? = null
-    private var rendition = DEFAULT_RENDITION
-    private var fileType = DEFAULT_FILE_TYPE
 
     override fun initialize() {
         super.initialize()
@@ -38,47 +54,50 @@ class GiphyModule(private val reactContext: ReactApplicationContext) : ReactCont
         GiphyCoreUI.configure(reactContext, apiKey)
     }
 
-    override fun getName(): String {
-        return "RNGiphyKeyboard"
-    }
+    override fun getName(): String = "RNGiphyKeyboard"
 
     @ReactMethod
     fun openGiphy(options: ReadableMap) {
-        val activity = reactContext.currentActivity as? ReactActivity
+        val activity = reactContext.currentActivity as? ReactActivity ?: return
 
-        if (activity != null) {
-            rendition = getOptionIfSet(options, "rendition") as? String ?: DEFAULT_RENDITION
-            fileType = getOptionIfSet(options, "fileType") as? String ?: DEFAULT_FILE_TYPE
+        val giphyDialog = with(options) {
+            // Get settings from JS call
+            val rendition = options.getStringSafe("rendition") ?: DEFAULT_RENDITION
+            val fileType = options.getStringSafe("fileType") ?: DEFAULT_FILE_TYPE
+            val gridType = getStringSafe("gridType") ?: DEFAULT_GRID_TYPE
+            val theme = getStringSafe("theme")
+            val mediaTypeConfig = getArrayList("mediaTypes")
+                    .filterIsInstance<String>()
+                    .mapNotNull(::getGPHContentType)
+                    .toTypedArray()
 
-            val gridType = getOptionIfSet(options, "gridType") as? String ?: DEFAULT_GRID_TYPE
-            val theme = getOptionIfSet(options, "theme") as? String
-            val mediaTypes = (getOptionIfSet(options, "mediaTypes") as? ReadableArray)?.toArrayList()
-            val filteredMediaTypes = mediaTypes?.filterIsInstance<String>() ?: listOf()
-
-            val settings = GPHSettings()
-            if (filteredMediaTypes.isNotEmpty()) {
-                settings.mediaTypeConfig = filteredMediaTypes.map {
-                    when (it) {
-                        "gifs" -> GPHContentType.gif
-                        "stickers" -> GPHContentType.sticker
-                        "emoji" -> GPHContentType.emoji
-                        "text" -> GPHContentType.text
-                        else -> null
+            val settings = GPHSettings(
+                    gridType = GridType.valueOf(gridType),
+                    theme = when (theme) {
+                        "dark" -> DarkTheme
+                        else -> LightTheme
                     }
-                }.filterIsInstance<GPHContentType>().toTypedArray()
-            }
-            settings.gridType = GridType.valueOf(gridType)
-            settings.theme = when (theme) {
-                "dark" -> DarkTheme
-                else -> LightTheme
+            )
+
+            if (mediaTypeConfig.isNotEmpty()) {
+                settings.mediaTypeConfig = mediaTypeConfig
             }
 
-            val giphyDialog = GiphyDialogFragment.newInstance(settings)
-            giphyDialog.show(activity.supportFragmentManager, "giphy_dialog")
-            giphyDialog.gifSelectionListener = this
-
-            this.giphyDialog = giphyDialog
+            // Create instance with settings and setup listener
+            with(GiphyDialogFragment.newInstance(settings)) {
+                gifSelectionListener = getGifListener(
+                        rendition = rendition,
+                        fileType = fileType
+                )
+                this
+            }
         }
+
+        // Present the dialog
+        giphyDialog.show(activity.supportFragmentManager, "giphy_dialog")
+
+        // Save the reference for `dismissGiphy`
+        this.giphyDialog = giphyDialog
     }
 
     @ReactMethod
@@ -86,46 +105,34 @@ class GiphyModule(private val reactContext: ReactApplicationContext) : ReactCont
         giphyDialog?.dismiss()
     }
 
-    override fun onGifSelected(media: Media) {
-        val body = Arguments.createMap()
-        val image = media.imageWithRenditionType(RenditionType.valueOf(rendition)) ?: return
-        val aspectRatio = image.width / image.height.toDouble()
-        val url = when (fileType) {
-            "mp4" -> image.mp4Url
-            "gif" -> image.gifUrl
-            "webp" -> image.webPUrl
-            else -> ""
+    private fun getGifListener(
+            rendition: String = DEFAULT_RENDITION,
+            fileType: String = DEFAULT_FILE_TYPE
+    ) = object : GiphyDialogFragment.GifSelectionListener {
+
+        override fun onGifSelected(media: Media) {
+            val body = Arguments.createMap()
+            val image = media.imageWithRenditionType(RenditionType.valueOf(rendition)) ?: return
+            val aspectRatio = image.width / image.height.toDouble()
+            val url = when (fileType) {
+                "mp4" -> image.mp4Url
+                "gif" -> image.gifUrl
+                "webp" -> image.webPUrl
+                else -> ""
+            }
+            body.putString("url", url)
+            body.putInt("width", image.width)
+            body.putInt("height", image.height)
+            body.putDouble("aspectRatio", aspectRatio)
+
+            reactContext.sendEvent(MEDIA_SELECTED_EVENT, body)
         }
-        body.putString("url", url)
-        body.putInt("width", image.width)
-        body.putInt("height", image.height)
-        body.putDouble("aspectRatio", aspectRatio)
 
+        override fun onDismissed() {
+            giphyDialog = null
 
-        sendEvent(MEDIA_SELECTED_EVENT, body)
-    }
-
-    override fun onDismissed() {
-        rendition = DEFAULT_RENDITION
-        fileType = DEFAULT_FILE_TYPE
-        giphyDialog = null
-
-        sendEvent(GIPHY_DISMISSED_EVENT)
-    }
-
-    private fun sendEvent(event: String, data: Any? = null) {
-        reactContext.getJSModule(RCTDeviceEventEmitter::class.java).emit(event, data)
-    }
-
-    private fun getOptionIfSet(options: ReadableMap, option: String): Any? {
-        if (!options.hasKey(option)) return null
-
-        val value = options.getDynamic(option)
-
-        return when (value.type.name) {
-            "String" -> value.asString()
-            "Array" -> value.asArray()
-            else -> null
+            reactContext.sendEvent(GIPHY_DISMISSED_EVENT)
         }
+
     }
 }
