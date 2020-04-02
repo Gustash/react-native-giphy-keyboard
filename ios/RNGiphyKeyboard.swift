@@ -20,7 +20,7 @@ open class RNGiphyKeyboard: RCTEventEmitter, GiphyDelegate {
     super.init()
 
     if let apiKey = Bundle.main.infoDictionary?["GiphyApiKey"] as? String {
-      GiphyUISDK.configure(apiKey: apiKey)
+      Giphy.configure(apiKey: apiKey)
     }
   }
 
