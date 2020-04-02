@@ -2,22 +2,23 @@
   "name": "react-native-giphy-keyboard",
   "title": "React Native Giphy",
   "version": "1.0.2",
-  "description": "TODO",
+  "description": "React Native implementation of the Giphy SDK for iOS and Android",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/github_account/react-native-giphy.git",
-    "baseUrl": "https://github.com/github_account/react-native-giphy"
+    "url": "git+https://github.com/Gustash/react-native-giphy-keyboard.git",
+    "baseUrl": "https://github.com/Gustash/react-native-giphy-keyboard"
   },
   "keywords": [
-    "react-native"
+    "react-native",
+    "giphy"
   ],
   "author": {
-    "name": "Your Name",
-    "email": "yourname@email.com"
+    "name": "Gustavo Parreira",
+    "email": "gustavotcparreira@gmail.com"
   },
   "license": "MIT",
   "licenseFilename": "LICENSE",
