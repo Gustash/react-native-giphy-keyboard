@@ -79,3 +79,18 @@ public extension GPHContentType {
     }
   }
 }
+
+public extension GPHTheme {
+  static func with(key: String) -> GPHTheme? {
+    switch key {
+    case "automatic":
+      return .automatic
+    case "light":
+      return .light
+    case "dark":
+        return .dark
+    default:
+        return nil
+    }
+  }
+}
