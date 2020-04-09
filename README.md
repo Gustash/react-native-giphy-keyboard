@@ -56,8 +56,35 @@ allprojects {
 Then go to your `android/app/src/main/res/values/strings.xml` and add the following key:
 
 ```xml
-<string name="giphy_api_key">YOUR_API_KEY_HERE</string>
+<string name="giphy_api_key" translatable="false">YOUR_API_KEY_HERE</string>
 ```
+
+## Verification Mode
+
+When you're ready to get a production key from Giphy, enable verification mode by doing the following:
+
+### iOS
+
+Add the following to your Info.plist and build the app.
+
+```plist
+<key>GiphyVerificationMode</key>
+<true/>
+```
+
+### Android
+
+Add the following to your `android/app/src/main/res/values/strings.xml` and build the app.
+
+```xml
+<bool name="giphy_verification_mode">true</bool>
+```
+
+Now follow the instructions on the Giphy Developers dashboard.
+
+### Note
+
+Remember to remove these when the verification is finished. You *DON'T* want this enabled when you ship to production.
 
 ## API
 
