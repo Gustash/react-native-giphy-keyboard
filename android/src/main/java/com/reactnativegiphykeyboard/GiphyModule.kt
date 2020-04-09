@@ -1,5 +1,6 @@
 package com.reactnativegiphykeyboard
 
+import android.content.res.Resources
 import com.facebook.react.ReactActivity
 import com.facebook.react.bridge.*
 import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter
@@ -49,10 +50,16 @@ class GiphyModule(private val reactContext: ReactApplicationContext) : ReactCont
         super.initialize()
 
         val packageName = reactContext.packageName
-        val resId = reactContext.resources.getIdentifier("giphy_api_key", "string", packageName)
-        val apiKey = reactContext.getString(resId)
+        val apiKeyResId = reactContext.resources.getIdentifier("giphy_api_key", "string", packageName)
+        val verModeResId = reactContext.resources.getIdentifier("giphy_verification_mode", "bool", packageName)
+        val apiKey = reactContext.getString(apiKeyResId)
+        val verificationMode = try {
+            reactContext.resources.getBoolean(verModeResId)
+        } catch (e: Resources.NotFoundException) {
+            false
+        }
 
-        GiphyCoreUI.configure(reactContext, apiKey)
+        GiphyCoreUI.configure(reactContext, apiKey, verificationMode)
     }
 
     override fun getName(): String = "RNGiphyKeyboard"

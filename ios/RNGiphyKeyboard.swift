@@ -20,7 +20,8 @@ open class RNGiphyKeyboard: RCTEventEmitter, GiphyDelegate {
     super.init()
 
     if let apiKey = Bundle.main.infoDictionary?["GiphyApiKey"] as? String {
-      Giphy.configure(apiKey: apiKey)
+      let verificationMode = Bundle.main.infoDictionary?["GiphyVerificationMode"] as? Bool ?? false
+      Giphy.configure(apiKey: apiKey, verificationMode: verificationMode)
     }
   }
 
@@ -45,9 +46,14 @@ open class RNGiphyKeyboard: RCTEventEmitter, GiphyDelegate {
       let giphy = GiphyViewController()
 
       if let mediaTypes = options?["mediaTypes"] as? [String] {
-        let mediaTypeConfig = mediaTypes.map({ GPHContentType.with(key: $0) }).filter({ $0 != nil }) as! [GPHContentType]
+        let mediaTypeConfig = mediaTypes
+            .map { GPHContentType.with(key: $0) }
+            .filter { $0 != nil } as! [GPHContentType]
 
         giphy.mediaTypeConfig = mediaTypeConfig
+      }
+      if let theme = options?["theme"] as? String, let gphTheme = GPHTheme.with(key: theme) {
+        giphy.theme = gphTheme
       }
       giphy.delegate = self
 
