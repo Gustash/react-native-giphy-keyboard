@@ -9,12 +9,12 @@ Pod::Spec.new do |s|
   s.description  = <<-DESC
                     react-native-giphy-keyboard
                    DESC
-  s.homepage     = "https://github.com/github_account/react-native-giphy"
+  s.homepage     = "https://github.com/Gustash/react-native-giphy-keyboard"
   s.license      = "MIT"
   # s.license    = { :type => "MIT", :file => "FILE_LICENSE" }
-  s.authors      = { "Your Name" => "yourname@email.com" }
+  s.authors      = { "Gustash" => "gustavotcparreira@gmail.com" }
   s.platforms    = { :ios => "9.0" }
-  s.source       = { :git => "https://github.com/github_account/react-native-giphy.git", :tag => "#{s.version}" }
+  s.source       = { :git => "https://github.com/Gustash/react-native-giphy-keyboard.git", :tag => "#{s.version}" }
 
   s.source_files = "ios/**/*.{h,m,swift}"
   s.requires_arc = true
@@ -22,6 +22,6 @@ Pod::Spec.new do |s|
   s.swift_version = "4.1"
 
   s.dependency "React"
-  s.dependency "Giphy", "~> 1.2.5"
+  s.dependency "Giphy", "~> 2.0.7"
 end
 
