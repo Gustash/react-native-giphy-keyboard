@@ -84,11 +84,11 @@ public extension GPHTheme {
   static func with(key: String) -> GPHTheme? {
     switch key {
     case "automatic":
-      return .automatic
+        return GPHTheme(type: GPHThemeType.automatic)
     case "light":
-      return .light
+        return GPHTheme(type: GPHThemeType.light)
     case "dark":
-        return .dark
+        return GPHTheme(type: GPHThemeType.dark)
     default:
         return nil
     }
