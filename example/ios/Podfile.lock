@@ -19,7 +19,7 @@ PODS:
     - boost-for-react-native
     - DoubleConversion
     - glog
-  - Giphy (1.1.9):
+  - Giphy (2.0.8):
     - DeepDiff
     - libwebp
     - PINCache
@@ -33,7 +33,14 @@ PODS:
   - libwebp/mux (1.1.0):
     - libwebp/demux
   - libwebp/webp (1.1.0)
-  - PINCache (2.3)
+  - PINCache (3.0.3):
+    - PINCache/Arc-exception-safe (= 3.0.3)
+    - PINCache/Core (= 3.0.3)
+  - PINCache/Arc-exception-safe (3.0.3):
+    - PINCache/Core
+  - PINCache/Core (3.0.3):
+    - PINOperation (~> 1.2.1)
+  - PINOperation (1.2.1)
   - RCTRequired (0.61.5)
   - RCTTypeSafety (0.61.5):
     - FBLazyVector (= 0.61.5)
@@ -197,8 +204,8 @@ PODS:
     - React-cxxreact (= 0.61.5)
     - React-jsi (= 0.61.5)
   - React-jsinspector (0.61.5)
-  - react-native-giphy-keyboard (1.0.0):
-    - Giphy (~> 1.1.9)
+  - react-native-giphy-keyboard (1.1.2):
+    - Giphy (~> 2.0.7)
     - React
   - React-RCTActionSheet (0.61.5):
     - React-Core/RCTActionSheetHeaders (= 0.61.5)
@@ -269,12 +276,14 @@ DEPENDENCIES:
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  https://github.com/CocoaPods/Specs.git:
     - boost-for-react-native
+  trunk:
     - DeepDiff
     - Giphy
     - libwebp
     - PINCache
+    - PINOperation
 
 EXTERNAL SOURCES:
   DoubleConversion:
@@ -337,10 +346,11 @@ SPEC CHECKSUMS:
   FBLazyVector: aaeaf388755e4f29cd74acbc9e3b8da6d807c37f
   FBReactNativeSpec: 118d0d177724c2d67f08a59136eb29ef5943ec75
   Folly: 30e7936e1c45c08d884aa59369ed951a8e68cf51
-  Giphy: c6267ae38e140d4bee3899269f323426e4609f0b
+  Giphy: b32a3f3dfdef939fe283a0bdb04d01db38399547
   glog: 1f3da668190260b06b429bb211bfbee5cd790c28
   libwebp: 946cb3063cea9236285f7e9a8505d806d30e07f3
-  PINCache: ce36ed282031b92fc7733ffe831f474ff80fddc2
+  PINCache: 7a8fc1a691173d21dbddbf86cd515de6efa55086
+  PINOperation: 00c935935f1e8cf0d1e2d6b542e75b88fc3e5e20
   RCTRequired: b153add4da6e7dbc44aebf93f3cf4fcae392ddf1
   RCTTypeSafety: 9aa1b91d7f9310fc6eadc3cf95126ffe818af320
   React: b6a59ef847b2b40bb6e0180a97d0ca716969ac78
@@ -350,7 +360,7 @@ SPEC CHECKSUMS:
   React-jsi: cb2cd74d7ccf4cffb071a46833613edc79cdf8f7
   React-jsiexecutor: d5525f9ed5f782fdbacb64b9b01a43a9323d2386
   React-jsinspector: fa0ecc501688c3c4c34f28834a76302233e29dc0
-  react-native-giphy-keyboard: 5a8530a3f13601de99d2bcc25301f169e0c2fceb
+  react-native-giphy-keyboard: 55c25e5f63a5c0c5231bcdecc599b8d404d23e46
   React-RCTActionSheet: 600b4d10e3aea0913b5a92256d2719c0cdd26d76
   React-RCTAnimation: 791a87558389c80908ed06cc5dfc5e7920dfa360
   React-RCTBlob: d89293cc0236d9cb0933d85e430b0bbe81ad1d72
@@ -365,4 +375,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: c9057a12886ee59d0e1c9c798a0feec00a0cf6a6
 
-COCOAPODS: 1.7.5
+COCOAPODS: 1.9.3
