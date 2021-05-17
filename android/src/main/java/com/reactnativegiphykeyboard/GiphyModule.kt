@@ -8,10 +8,9 @@ import com.giphy.sdk.core.models.Media
 import com.giphy.sdk.core.models.enums.RenditionType
 import com.giphy.sdk.ui.GPHContentType
 import com.giphy.sdk.ui.GPHSettings
-import com.giphy.sdk.ui.GiphyCoreUI
-import com.giphy.sdk.ui.themes.DarkTheme
+import com.giphy.sdk.ui.Giphy
+import com.giphy.sdk.ui.themes.GPHTheme
 import com.giphy.sdk.ui.themes.GridType
-import com.giphy.sdk.ui.themes.LightTheme
 import com.giphy.sdk.ui.utils.imageWithRenditionType
 import com.giphy.sdk.ui.views.GiphyDialogFragment
 
@@ -59,7 +58,7 @@ class GiphyModule(private val reactContext: ReactApplicationContext) : ReactCont
             false
         }
 
-        GiphyCoreUI.configure(reactContext, apiKey, verificationMode)
+        Giphy.configure(reactContext, apiKey, verificationMode)
     }
 
     override fun getName(): String = "RNGiphyKeyboard"
@@ -81,8 +80,8 @@ class GiphyModule(private val reactContext: ReactApplicationContext) : ReactCont
                     GridType.valueOf(gridType ?: DEFAULT_GRID_TYPE)
                 }
                 theme = when (getStringSafe("theme")) {
-                    "dark" -> DarkTheme
-                    else -> LightTheme
+                    "dark" -> GPHTheme.Dark
+                    else -> GPHTheme.Light
                 }
             }
 
@@ -109,7 +108,7 @@ class GiphyModule(private val reactContext: ReactApplicationContext) : ReactCont
             fileType: String = DEFAULT_FILE_TYPE
     ) = object : GiphyDialogFragment.GifSelectionListener {
 
-        override fun onGifSelected(media: Media) {
+        override fun onGifSelected(media: Media, searchTerm: String?, selectedContentType: GPHContentType) {
             val image = media.imageWithRenditionType(RenditionType.valueOf(rendition)) ?: return
             val aspectRatio = image.width / image.height.toDouble()
             val url = when (fileType) {
@@ -129,10 +128,14 @@ class GiphyModule(private val reactContext: ReactApplicationContext) : ReactCont
             reactContext.sendEvent(MEDIA_SELECTED_EVENT, body)
         }
 
-        override fun onDismissed() {
+        override fun onDismissed(selectedContentType: GPHContentType) {
             giphyDialog = null
 
             reactContext.sendEvent(GIPHY_DISMISSED_EVENT)
+        }
+        
+        override fun didSearchTerm(term: String) {
+
         }
     }
 }

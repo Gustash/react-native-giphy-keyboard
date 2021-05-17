@@ -60,6 +60,7 @@ android {
 repositories {
     // ref: https://www.baeldung.com/maven-local-repository
     mavenLocal()
+    mavenCentral()
     maven {
         // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
         url "$rootDir/../node_modules/react-native/android"
@@ -75,7 +76,7 @@ repositories {
 dependencies {
     //noinspection GradleDynamicVersion
     implementation 'com.facebook.react:react-native:+'  // From node_modules
-    implementation 'com.giphy.sdk:ui:1.1.2'
+    implementation 'com.giphy.sdk:ui:2.1.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "com.facebook.fresco:animated-gif:2.1.0"
