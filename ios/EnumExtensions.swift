@@ -1,4 +1,3 @@
-import GiphyCoreSDK
 import GiphyUISDK
 
 public extension GPHRenditionType {
