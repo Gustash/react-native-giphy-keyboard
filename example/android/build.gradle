@@ -4,7 +4,7 @@ buildscript {
     ext {
         kotlin_version = "1.3.61"
         buildToolsVersion = "28.0.3"
-        minSdkVersion = 16
+        minSdkVersion = 21
         compileSdkVersion = 28
         targetSdkVersion = 28
     }
@@ -31,10 +31,6 @@ allprojects {
         maven {
             // Android JSC is installed from npm
             url("$rootDir/../node_modules/jsc-android/dist")
-        }
-
-        maven {
-            url "http://giphy.bintray.com/giphy-sdk"
         }
 
         google()
