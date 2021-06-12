@@ -98,6 +98,7 @@ GiphyKeyboard.openGiphy({
   fileType: 'gif',
   mediaTypes: ['gifs', 'stickers'],
   theme: 'dark',
+  rating: 'ratedPG', // available only for android and it's optional
 });
 ```
 
@@ -124,6 +125,10 @@ useEffect(() => {
   };
 }, []);
 ```
+
+## List of Rating ( Android Only ) (Optional)
+
+See here: [List](https://developers.giphy.com/docs/optional-settings/#rating)
 
 ## Example project
 
