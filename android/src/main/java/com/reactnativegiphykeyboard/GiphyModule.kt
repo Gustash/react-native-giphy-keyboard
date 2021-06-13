@@ -5,13 +5,13 @@ import com.facebook.react.ReactActivity
 import com.facebook.react.bridge.*
 import com.facebook.react.modules.core.DeviceEventManagerModule.RCTDeviceEventEmitter
 import com.giphy.sdk.core.models.Media
+import com.giphy.sdk.core.models.enums.RatingType
 import com.giphy.sdk.core.models.enums.RenditionType
 import com.giphy.sdk.ui.GPHContentType
 import com.giphy.sdk.ui.GPHSettings
-import com.giphy.sdk.ui.GiphyCoreUI
-import com.giphy.sdk.ui.themes.DarkTheme
+import com.giphy.sdk.ui.Giphy
+import com.giphy.sdk.ui.themes.GPHTheme
 import com.giphy.sdk.ui.themes.GridType
-import com.giphy.sdk.ui.themes.LightTheme
 import com.giphy.sdk.ui.utils.imageWithRenditionType
 import com.giphy.sdk.ui.views.GiphyDialogFragment
 
@@ -59,7 +59,7 @@ class GiphyModule(private val reactContext: ReactApplicationContext) : ReactCont
             false
         }
 
-        GiphyCoreUI.configure(reactContext, apiKey, verificationMode)
+        Giphy.configure(reactContext, apiKey, verificationMode)
     }
 
     override fun getName(): String = "RNGiphyKeyboard"
@@ -71,6 +71,7 @@ class GiphyModule(private val reactContext: ReactApplicationContext) : ReactCont
         // Create new dialog instance and assign it
         giphyDialog = with(options) {
             // Get settings from JS call
+            val ratingType = getStringSafe("rating")
             val settings = GPHSettings().apply {
                 mediaTypeConfig = getArrayList("mediaTypes")
                         .filterIsInstance<String>()
@@ -81,9 +82,10 @@ class GiphyModule(private val reactContext: ReactApplicationContext) : ReactCont
                     GridType.valueOf(gridType ?: DEFAULT_GRID_TYPE)
                 }
                 theme = when (getStringSafe("theme")) {
-                    "dark" -> DarkTheme
-                    else -> LightTheme
+                    "dark" -> GPHTheme.Dark
+                    else -> GPHTheme.Light
                 }
+                rating= getRating(ratingType)
             }
 
             // Create instance
@@ -99,6 +101,19 @@ class GiphyModule(private val reactContext: ReactApplicationContext) : ReactCont
         giphyDialog?.show(activity.supportFragmentManager, "giphy_dialog")
     }
 
+    private fun getRating(ratingType: String?): RatingType {
+        return when (ratingType) {
+            "ratedPG" -> RatingType.pg
+            "ratedPG13" -> RatingType.pg13
+            "ratedR" -> RatingType.r
+            "nsfw" -> RatingType.nsfw
+            "ratedY" -> RatingType.y
+            "ratedG" -> RatingType.g
+            "unrated" -> RatingType.unrated
+            else -> RatingType.pg13
+        }
+    }
+
     @ReactMethod
     fun dismissGiphy() {
         giphyDialog?.dismiss()
@@ -107,9 +122,10 @@ class GiphyModule(private val reactContext: ReactApplicationContext) : ReactCont
     private fun getGifListener(
             rendition: String = DEFAULT_RENDITION,
             fileType: String = DEFAULT_FILE_TYPE
-    ) = object : GiphyDialogFragment.GifSelectionListener {
+    ) =  object : GiphyDialogFragment.GifSelectionListener {
 
-        override fun onGifSelected(media: Media) {
+
+        override fun onGifSelected(media: Media, searchTerm: String?, selectedContentType: GPHContentType) {
             val image = media.imageWithRenditionType(RenditionType.valueOf(rendition)) ?: return
             val aspectRatio = image.width / image.height.toDouble()
             val url = when (fileType) {
@@ -125,13 +141,14 @@ class GiphyModule(private val reactContext: ReactApplicationContext) : ReactCont
                 putInt("height", image.height)
                 putDouble("aspectRatio", aspectRatio)
             }
-
             reactContext.sendEvent(MEDIA_SELECTED_EVENT, body)
         }
 
-        override fun onDismissed() {
-            giphyDialog = null
+        override fun didSearchTerm(term: String) {
+        }
 
+        override fun onDismissed(selectedContentType: GPHContentType) {
+            giphyDialog = null
             reactContext.sendEvent(GIPHY_DISMISSED_EVENT)
         }
     }
