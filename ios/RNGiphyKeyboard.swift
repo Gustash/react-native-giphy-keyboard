@@ -1,6 +1,5 @@
 import Foundation
 import GiphyUISDK
-import GiphyCoreSDK
 
 struct RNGiphyKeyboardEvents {
   static let mediaSelected = "mediaSelected"

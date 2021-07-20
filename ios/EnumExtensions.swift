@@ -1,4 +1,3 @@
-import GiphyCoreSDK
 import GiphyUISDK
 
 public extension GPHRenditionType {
@@ -89,6 +88,10 @@ public extension GPHTheme {
         return GPHTheme(type: .light)
     case "dark":
         return GPHTheme(type: .dark)
+    case "lightBlur":
+        return GPHTheme(type: .lightBlur)
+    case "darkBlur":
+        return GPHTheme(type: .darkBlur)
     default:
         return nil
     }
