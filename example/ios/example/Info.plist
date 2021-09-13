@@ -26,8 +26,6 @@
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
 		<key>NSExceptionDomains</key>
 		<dict>
 			<key>localhost</key>
@@ -52,7 +50,7 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>GiphyApiKey</key>
-	<string>YOUR_API_KEY_HERE</string>
+	<string>mL6p6SKZq1QJFSE1n3azpyRIAz9nzRD5</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 </dict>
