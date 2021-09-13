@@ -1,4 +1,3 @@
 <resources>
     <string name="app_name">example</string>
-    <string name="giphy_api_key">YOUR_API_KEY_HERE</string>
 </resources>
