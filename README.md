@@ -1,5 +1,9 @@
 # react-native-giphy-keyboard
 
+# ⚠️  Deprecation notice ⚠️
+
+This repository has been deprecated in favor of the official https://github.com/Giphy/giphy-react-native-sdk and the `@giphy/react-native-sdk` npm package.
+
 ### This module implements the iOS and Android SDKs from Giphy for a simple usage. No more fumbling around with the Giphy API!
 
 ## Getting started
