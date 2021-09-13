@@ -22,6 +22,6 @@ Pod::Spec.new do |s|
   s.swift_version = "4.1"
 
   s.dependency "React"
-  s.dependency "Giphy", "~> 2.0.7"
+  s.dependency "Giphy", "~> 2.1.0"
 end
 
