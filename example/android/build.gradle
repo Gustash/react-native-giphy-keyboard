@@ -2,6 +2,7 @@
 
 buildscript {
     ext {
+        kotlin_version = "1.5.30"
         buildToolsVersion = "30.0.2"
         minSdkVersion = 21
         compileSdkVersion = 30
@@ -13,6 +14,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath("com.android.tools.build:gradle:4.2.1")
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -30,6 +32,9 @@ allprojects {
         maven {
             // Android JSC is installed from npm
             url("$rootDir/../node_modules/jsc-android/dist")
+        }
+        maven {
+            url "http://giphy.bintray.com/giphy-sdk"
         }
 
         google()
